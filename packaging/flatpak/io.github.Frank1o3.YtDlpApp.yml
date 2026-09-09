@@ -28,32 +28,17 @@ modules:
     buildsystem: simple
     build-commands:
       - mkdir -p /app/lib/ffmpeg
-    # the actual ffmpeg binaries come from the extension above at
-    # runtime; this just ensures the mount-point directory exists.
 
-  # --- Python dependencies -------------------------------------------
-  # This module is a placeholder. Generate the real one with
-  # flatpak-pip-generator (see README-flatpak.md) and paste its output
-  # here, or `include:` the generated json/yaml file it produces.
-  #
-  # - name: python3-requirements
-  #   buildsystem: simple
-  #   build-commands:
-  #     - pip3 install --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} "yt-dlp" "PyQt6"
-  #   sources:
-  #     - <paste generated source entries here>
+  - pypi-dependencies.json
+  - hatchling.json
 
-  # --- The app itself --------------------------------------------------
   - name: yt-dlp-app
     buildsystem: simple
     build-commands:
-      - pip3 install --no-index --no-build-isolation --prefix=${FLATPAK_DEST} .
-      - install -Dm644 packaging/flatpak/io.github.Frank1o3.YtDlpApp.desktop
-          /app/share/applications/io.github.Frank1o3.YtDlpApp.desktop
-      - install -Dm644 packaging/flatpak/io.github.Frank1o3.YtDlpApp.metainfo.xml
-          /app/share/metainfo/io.github.Frank1o3.YtDlpApp.metainfo.xml
-      - install -Dm644 packaging/flatpak/icon.svg
-          /app/share/icons/hicolor/scalable/apps/io.github.Frank1o3.YtDlpApp.svg
+      - pip3 install --no-index --no-build-isolation --no-deps --prefix=${FLATPAK_DEST} .
+      - install -Dm644 packaging/flatpak/io.github.Frank1o3.YtDlpApp.desktop /app/share/applications/io.github.Frank1o3.YtDlpApp.desktop
+      - install -Dm644 packaging/flatpak/io.github.Frank1o3.YtDlpApp.metainfo.xml /app/share/metainfo/io.github.Frank1o3.YtDlpApp.metainfo.xml
+      - install -Dm644 packaging/flatpak/icon.svg /app/share/icons/hicolor/scalable/apps/io.github.Frank1o3.YtDlpApp.svg
     sources:
       - type: dir
-        path: ../..    # the project root (contains pyproject.toml + src/)
+        path: ../..

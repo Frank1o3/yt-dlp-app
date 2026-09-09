@@ -5,3 +5,4 @@ uv.lock
 build/
 dist/
 *.egg-info/
+build-dir/

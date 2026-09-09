@@ -1,5 +1,8 @@
 [project]
-    dependencies=["PyQt6>=6.6.0", "yt-dlp>=2026.8.19"]
+    dependencies=[
+    "PyQt6>=6.6.0",
+    "yt-dlp>=2026.8.19",
+]
     description="Simple PyQt6 GUI front-end for yt-dlp"
     name="yt-dlp-app"
     readme="README.md"
@@ -15,3 +18,9 @@
 
 [tool.hatch.build.targets.wheel]
     packages=["src/yt_dlp_app"]
+
+[dependency-groups]
+dev = [
+    "packaging>=26.3",
+    "requirements-parser>=0.13.1",
+]
