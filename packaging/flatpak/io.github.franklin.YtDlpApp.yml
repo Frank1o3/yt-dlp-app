@@ -1,0 +1,59 @@
+# Rename this file (and the "id" below) to match your own reverse-DNS,
+# e.g. io.github.<your-username>.YtDlpApp — Flatpak identifies apps by
+# this ID, and flatpak-builder expects the manifest filename to match it.
+id: io.github.franklin.YtDlpApp
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'          # check this bundles the Python you want - see README-flatpak.md
+sdk: org.freedesktop.Sdk
+
+command: yt-dlp-app
+
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri                       # GPU accel for Qt's rendering
+  - --filesystem=xdg-download            # so it can write to ~/Downloads
+  # If you point the app's output folder somewhere else habitually,
+  # add e.g. --filesystem=~/Videos or --filesystem=home for broader access.
+
+add-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    directory: lib/ffmpeg
+    version: '24.08'      # must match runtime-version above
+    add-ld-path: .
+
+modules:
+  - name: ffmpeg-install
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/lib/ffmpeg
+    # the actual ffmpeg binaries come from the extension above at
+    # runtime; this just ensures the mount-point directory exists.
+
+  # --- Python dependencies -------------------------------------------
+  # This module is a placeholder. Generate the real one with
+  # flatpak-pip-generator (see README-flatpak.md) and paste its output
+  # here, or `include:` the generated json/yaml file it produces.
+  #
+  # - name: python3-requirements
+  #   buildsystem: simple
+  #   build-commands:
+  #     - pip3 install --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} "yt-dlp" "PyQt6"
+  #   sources:
+  #     - <paste generated source entries here>
+
+  # --- The app itself --------------------------------------------------
+  - name: yt-dlp-app
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-index --no-build-isolation --prefix=${FLATPAK_DEST} .
+      - install -Dm644 packaging/flatpak/io.github.franklin.YtDlpApp.desktop
+          /app/share/applications/io.github.franklin.YtDlpApp.desktop
+      - install -Dm644 packaging/flatpak/io.github.franklin.YtDlpApp.metainfo.xml
+          /app/share/metainfo/io.github.franklin.YtDlpApp.metainfo.xml
+      - install -Dm644 packaging/flatpak/icon.svg
+          /app/share/icons/hicolor/scalable/apps/io.github.franklin.YtDlpApp.svg
+    sources:
+      - type: dir
+        path: ../..    # the project root (contains pyproject.toml + src/)

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=yt-dlp-app
+Comment=Simple GUI for downloading video/audio with yt-dlp
+Exec=yt-dlp-app
+Icon=io.github.franklin.YtDlpApp
+Categories=AudioVideo;Network;
+Terminal=false
+StartupNotify=true

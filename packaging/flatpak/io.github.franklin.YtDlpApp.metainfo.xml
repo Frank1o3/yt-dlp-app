@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.franklin.YtDlpApp</id>
+  <name>yt-dlp-app</name>
+  <summary>Simple GUI for downloading video/audio with yt-dlp</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>
+      A small PyQt6 front-end for yt-dlp: paste a URL, pick a video or
+      audio-only quality preset, and download - including whole
+      playlists.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.franklin.YtDlpApp.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-09-09">
+      <description><p>Initial release.</p></description>
+    </release>
+  </releases>
+</component>
