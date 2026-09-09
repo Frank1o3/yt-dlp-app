@@ -6,15 +6,14 @@ dependency has to be pre-declared as a source (a URL + checksum) that
 flatpak-builder downloads *before* sealing off the network. That's the
 main extra step compared to a normal Python project.
 
-## 0. Rename the app ID first
+## 0. App ID
 
-Everything here uses the placeholder `io.github.franklin.YtDlpApp`.
-Rename the manifest file, and every occurrence of that string inside
-`io.github.franklin.YtDlpApp.yml`, `.desktop`, and `.metainfo.xml`, to
-your own reverse-DNS id (e.g. `io.github.<your-username>.YtDlpApp`).
-This only matters for publishing on Flathub eventually - for purely
-local/personal use any id works, it's just the internal name Flatpak
-uses to track the app.
+This is already set up for `Frank1o3/yt-dlp-app`: the id is
+`io.github.Frank1o3.YtDlpApp` throughout the manifest, `.desktop`, and
+`.metainfo.xml` files. (Hyphens aren't valid inside Flatpak/D-Bus ID
+components, which is why `yt-dlp-app` becomes `YtDlpApp` rather than
+being used verbatim.) If you ever fork this under a different GitHub
+account, that's the string to swap everywhere.
 
 ## 1. Install the tooling
 
@@ -49,7 +48,7 @@ python3 flatpak-pip-generator --output python3-requirements yt-dlp PyQt6
 
 This produces `python3-requirements.json` - a flatpak-builder module
 listing every package (including transitive deps) as a pinned
-URL+sha256 source. Open `io.github.franklin.YtDlpApp.yml` and either:
+URL+sha256 source. Open `io.github.Frank1o3.YtDlpApp.yml` and either:
 
 - add `"python3-requirements.json"` to the manifest's top-level
   `modules:` list *before* the `yt-dlp-app` module (flatpak-builder
@@ -66,13 +65,13 @@ From the project root (one level up from `packaging/flatpak/`):
 
 ```bash
 flatpak-builder --user --install --force-clean build-dir \
-  packaging/flatpak/io.github.franklin.YtDlpApp.yml
+  packaging/flatpak/io.github.Frank1o3.YtDlpApp.yml
 ```
 
 `--install` puts it in your user Flatpak install so you can just run:
 
 ```bash
-flatpak run io.github.franklin.YtDlpApp
+flatpak run io.github.Frank1o3.YtDlpApp
 ```
 
 ## 4. Iterating
