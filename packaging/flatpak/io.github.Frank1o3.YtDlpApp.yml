@@ -3,7 +3,7 @@
 # this ID, and flatpak-builder expects the manifest filename to match it.
 id: io.github.Frank1o3.YtDlpApp
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'          # check this bundles the Python you want - see README-flatpak.md
+runtime-version: '25.08'          # check this bundles the Python you want - see README-flatpak.md
 sdk: org.freedesktop.Sdk
 
 command: yt-dlp-app
@@ -20,7 +20,7 @@ finish-args:
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
-    version: '24.08'      # must match runtime-version above
+    version: '25.08'      # must match runtime-version above
     add-ld-path: .
 
 modules:
