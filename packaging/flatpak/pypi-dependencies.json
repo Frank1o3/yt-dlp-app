@@ -12,8 +12,19 @@
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/8b/47/b25c13eca5bebc6505394d0223e46d7ebf0c57dcac2ed908d7d19b18ab6b/pyqt6-6.11.0.tar.gz",
-                    "sha256": "45dd60aa69976de1918b5ced6b4e7b6a25abd2a919ecef5fd5826ecc76718889"
+                    "url": "https://files.pythonhosted.org/packages/c3/a0/bd1399740dfa80c0a94d20b02d89962a31458233dcf70eaa09bfbccf3d0f/pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl",
+                    "sha256": "8555277989fa7d114cb3c3443fd261d566909f7268ceedd41d93a5f02d37ec05",
+                    "only-arches": [
+                        "x86_64"
+                    ]
+                },
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/d3/db/425b184ac2430ba1978bb507ffd285ec007a872644e2ae5df13332dbcb05/pyqt6-6.11.0-cp310-abi3-manylinux_2_39_aarch64.whl",
+                    "sha256": "0734959955adde095af9a074213a7f73386d1bbbddfc27346b4c0621641a692e",
+                    "only-arches": [
+                        "aarch64"
+                    ]
                 },
                 {
                     "type": "file",
@@ -33,8 +44,19 @@
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/d1/23/16c583dbb6b53e0494dfcf7d1a44778c82e324edda62326727b37f1a5b34/pyqt6_sip-13.12.0.tar.gz",
-                    "sha256": "a7ad45c1e3cec3a2473d37ea9870b6c3baeccc560298623c8eb59265714c06e2"
+                    "url": "https://files.pythonhosted.org/packages/34/9a/3f8127196bb2e303914c92670590633a7b3141aca640dc0122c326366c3d/pyqt6_sip-13.12.0-cp313-cp313-manylinux1_x86_64.manylinux_2_5_x86_64.whl",
+                    "sha256": "5b5610a21401dbf97eaa82a2d35e727d3269ef370f299a892ff154f4b6f338ca",
+                    "only-arches": [
+                        "x86_64"
+                    ]
+                },
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/e4/56/2ec8cd46fb9ac112112792f879706afd4f2097f69dd8893627923110c30e/pyqt6_sip-13.12.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+                    "sha256": "84b5df633e3c7bc5faaec18b71f45d297002ee258350f823648b6f447763524c",
+                    "only-arches": [
+                        "aarch64"
+                    ]
                 }
             ]
         },
@@ -72,8 +94,19 @@
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/d1/23/16c583dbb6b53e0494dfcf7d1a44778c82e324edda62326727b37f1a5b34/pyqt6_sip-13.12.0.tar.gz",
-                    "sha256": "a7ad45c1e3cec3a2473d37ea9870b6c3baeccc560298623c8eb59265714c06e2"
+                    "url": "https://files.pythonhosted.org/packages/34/9a/3f8127196bb2e303914c92670590633a7b3141aca640dc0122c326366c3d/pyqt6_sip-13.12.0-cp313-cp313-manylinux1_x86_64.manylinux_2_5_x86_64.whl",
+                    "sha256": "5b5610a21401dbf97eaa82a2d35e727d3269ef370f299a892ff154f4b6f338ca",
+                    "only-arches": [
+                        "x86_64"
+                    ]
+                },
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/e4/56/2ec8cd46fb9ac112112792f879706afd4f2097f69dd8893627923110c30e/pyqt6_sip-13.12.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+                    "sha256": "84b5df633e3c7bc5faaec18b71f45d297002ee258350f823648b6f447763524c",
+                    "only-arches": [
+                        "aarch64"
+                    ]
                 }
             ]
         },
