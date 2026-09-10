@@ -1,27 +1,28 @@
-# Rename this file (and the "id" below) to match your own reverse-DNS,
-# e.g. io.github.<your-username>.YtDlpApp — Flatpak identifies apps by
-# this ID, and flatpak-builder expects the manifest filename to match it.
 id: io.github.Frank1o3.YtDlpApp
-runtime: org.freedesktop.Platform
-runtime-version: '25.08'          # check this bundles the Python you want - see README-flatpak.md
-sdk: org.freedesktop.Sdk
+
+runtime: org.kde.Platform
+runtime-version: '6.11'
+sdk: org.kde.Sdk
+
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '6.11'
 
 command: yt-dlp-app
 
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
+
+build-options:
+  env:
+    BASEAPP_REMOVE_WEBENGINE: '1'
+
 finish-args:
   - --share=ipc
-  - --socket=x11
   - --socket=wayland
-  - --device=dri                       # GPU accel for Qt's rendering
-  - --filesystem=xdg-download            # so it can write to ~/Downloads
-  # If you point the app's output folder somewhere else habitually,
-  # add e.g. --filesystem=~/Videos or --filesystem=home for broader access.
-
-add-extensions:
-  org.freedesktop.Platform.ffmpeg-full:
-    directory: lib/ffmpeg
-    version: '25.08'      # must match runtime-version above
-    add-ld-path: .
+  - --socket=fallback-x11
+  - --device=dri
+  - --filesystem=xdg-download
+  - --share=network
 
 modules:
   - name: ffmpeg-install
