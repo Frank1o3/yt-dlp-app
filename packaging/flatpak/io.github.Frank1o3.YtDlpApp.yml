@@ -1,28 +1,23 @@
 id: io.github.Frank1o3.YtDlpApp
-
-runtime: org.kde.Platform
-runtime-version: '6.11'
-sdk: org.kde.Sdk
-
-base: com.riverbankcomputing.PyQt.BaseApp
-base-version: '6.11'
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
 
 command: yt-dlp-app
 
-cleanup-commands:
-  - /app/cleanup-BaseApp.sh
-
-build-options:
-  env:
-    BASEAPP_REMOVE_WEBENGINE: '1'
-
 finish-args:
   - --share=ipc
+  - --socket=x11
   - --socket=wayland
-  - --socket=fallback-x11
   - --device=dri
   - --filesystem=xdg-download
   - --share=network
+
+add-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    directory: lib/ffmpeg
+    version: '25.08'
+    add-ld-path: .
 
 modules:
   - name: ffmpeg-install
