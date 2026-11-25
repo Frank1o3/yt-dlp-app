@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=yt-dlp App
-Comment=Simple graphical frontend for yt-dlp
-Exec=yt-dlp-app
-Icon=io.github.Frank1o3.YtDlpApp
-Terminal=false
-Type=Application
-Categories=AudioVideo;Network;

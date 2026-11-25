@@ -11,8 +11,8 @@ from __future__ import annotations
 
 import re
 
-from PyQt6.QtCore import QThread, pyqtSignal
 import yt_dlp
+from PyQt6.QtCore import QThread, pyqtSignal
 
 # yt-dlp's _percent_str/_speed_str/_eta_str come pre-colored with ANSI
 # escape codes (it assumes it's writing to a terminal). A QPlainTextEdit

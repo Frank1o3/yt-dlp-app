@@ -2,35 +2,35 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PyQt6.QtCore import Qt, QStandardPaths
+from PyQt6.QtCore import QStandardPaths
 from PyQt6.QtWidgets import (
-    QMainWindow,
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
+    QButtonGroup,
+    QCheckBox,
+    QComboBox,
+    QFileDialog,
     QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
-    QCheckBox,
-    QPushButton,
-    QTabWidget,
-    QGroupBox,
-    QRadioButton,
-    QComboBox,
-    QButtonGroup,
-    QPlainTextEdit,
-    QFileDialog,
+    QMainWindow,
     QMessageBox,
+    QPlainTextEdit,
+    QPushButton,
+    QRadioButton,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
 )
 
 from .formats import (
-    VIDEO_QUALITIES,
-    VIDEO_CONTAINERS,
     AUDIO_CODECS,
     AUDIO_QUALITIES,
     LOSSLESS_CODECS,
-    video_format_string,
+    VIDEO_CONTAINERS,
+    VIDEO_QUALITIES,
     is_probably_youtube_url,
+    video_format_string,
 )
 from .worker import DownloadWorker
 
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         self.output_dir = Path(
             QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DownloadLocation)
             or str(Path.home() / "Downloads")
-        )
+        ) / "VideoDownloader"
 
         self._build_ui()
 

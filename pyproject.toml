@@ -6,7 +6,7 @@
     description="Simple PyQt6 GUI front-end for yt-dlp"
     name="yt-dlp-app"
     readme="README.md"
-    requires-python=">=3.13"
+    requires-python=">=3.14"
     version="0.1.0"
 
     [project.scripts]
