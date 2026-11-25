@@ -9,12 +9,5 @@
     [project.scripts]
         yt-dlp-app="yt_dlp_app.main:main"
 
-[build-system]
-    build-backend="hatchling.build"
-    requires=["hatchling"]
-
-[tool.hatch.build.targets.wheel]
-    packages=["src/yt_dlp_app"]
-
-[dependency-groups]
-    dev=["packaging>=26.3", "requirements-parser>=0.13.1"]
+[tool.uv]
+    package=true
