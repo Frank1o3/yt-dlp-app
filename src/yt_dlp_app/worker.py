@@ -1,70 +1,121 @@
-"""
-Background worker that runs a yt-dlp download without blocking the GUI.
-
-yt-dlp's progress_hooks callback fires on whatever thread .download() is
-called from -- since that's this QThread's run() method, it's safe to
-emit Qt signals from inside the hook; Qt marshals the signal back to the
-main thread automatically because the receiver (MainWindow) lives there.
-"""
+"""Run yt-dlp in a worker thread and forward logs and progress to the UI."""
 
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Mapping
+from threading import Event
+from typing import Any
 
 import yt_dlp
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QObject, QThread, pyqtSignal
 
-# yt-dlp's _percent_str/_speed_str/_eta_str come pre-colored with ANSI
-# escape codes (it assumes it's writing to a terminal). A QPlainTextEdit
-# doesn't interpret those, so they show up as literal "[0;94m" noise -
-# strip them before they ever reach the UI.
 _ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 
-def _strip_ansi(text: str) -> str:
-    return _ANSI_RE.sub("", text)
+def _strip_ansi(value: str) -> str:
+    """Remove terminal color codes before showing yt-dlp output in Qt."""
+    return _ANSI_RE.sub("", value)
+
+
+class _DownloadLogger:
+    """Adapt yt-dlp's logger callbacks to the worker's Qt progress signal."""
+
+    def __init__(self, emit: Callable[[str], None]) -> None:
+        self._emit = emit
+
+    def debug(self, message: str) -> None:
+        if message and not message.startswith("[debug]"):
+            self._emit(_strip_ansi(message))
+
+    def warning(self, message: str) -> None:
+        if message:
+            self._emit(f"Warning: {_strip_ansi(message)}")
+
+    def error(self, message: str) -> None:
+        if message:
+            self._emit(f"Error: {_strip_ansi(message)}")
 
 
 class DownloadWorker(QThread):
-    progress = pyqtSignal(str)
-    finished_ok = pyqtSignal()
-    failed = pyqtSignal(str)
+    """Execute one yt-dlp download without blocking Qt's main thread."""
 
-    def __init__(self, url: str, ydl_opts: dict, parent=None):
+    progress = pyqtSignal(str, int)
+    completed = pyqtSignal()
+    failed = pyqtSignal(str)
+    cancelled = pyqtSignal()
+
+    def __init__(
+        self,
+        url: str,
+        ydl_options: Mapping[str, Any],
+        parent: QObject | None = None,
+    ) -> None:
         super().__init__(parent)
         self.url = url
-        self.ydl_opts = ydl_opts
-        self._cancelled = False
+        self.ydl_options = dict(ydl_options)
+        self._cancel_requested = Event()
 
-    def cancel(self):
-        # yt-dlp checks this via a match_filter trick isn't ideal for
-        # mid-download cancellation; simplest reliable approach is to
-        # just let the current file finish and stop the queue.
-        self._cancelled = True
+    def cancel(self) -> None:
+        """Request cancellation; yt-dlp stops at its next progress callback."""
+        self._cancel_requested.set()
 
-    def _hook(self, d: dict):
-        if self._cancelled:
-            raise yt_dlp.utils.DownloadError("Cancelled by user")
+    def _emit_log(self, message: str) -> None:
+        self.progress.emit(message, -1)
 
-        status = d.get("status")
+    def _progress_hook(self, data: dict[str, Any]) -> None:
+        if self._cancel_requested.is_set():
+            raise yt_dlp.utils.DownloadError("Download cancelled by user.")
+
+        status = data.get("status")
+        filename = str(data.get("filename") or "media item")
+
         if status == "downloading":
-            pct = _strip_ansi((d.get("_percent_str") or "").strip())
-            speed = _strip_ansi((d.get("_speed_str") or "").strip())
-            eta = _strip_ansi((d.get("_eta_str") or "").strip())
-            name = d.get("filename", "")
-            self.progress.emit(f"{pct}  {speed}  ETA {eta}  -  {name}")
-        elif status == "finished":
-            self.progress.emit(f"Downloaded, post-processing: {d.get('filename', '')}")
+            downloaded = data.get("downloaded_bytes")
+            total = data.get("total_bytes") or data.get("total_bytes_estimate")
+            percentage = -1
+            if (
+                isinstance(downloaded, (int, float))
+                and isinstance(total, (int, float))
+                and total > 0
+            ):
+                percentage = round(downloaded / total * 100)
 
-    def run(self):
-        opts = dict(self.ydl_opts)
-        opts["progress_hooks"] = [self._hook]
+            percent_text = _strip_ansi(str(data.get("_percent_str") or "")).strip()
+            speed = _strip_ansi(str(data.get("_speed_str") or "")).strip()
+            eta = _strip_ansi(str(data.get("_eta_str") or "")).strip()
+            details = [part for part in (percent_text, speed, f"ETA {eta}" if eta else "") if part]
+            summary = "  ·  ".join(details)
+            message = f"Downloading {filename}"
+            if summary:
+                message = f"{message}  —  {summary}"
+            self.progress.emit(message, percentage)
+        elif status == "finished":
+            self.progress.emit(f"Download finished; processing {filename}", 100)
+
+    def run(self) -> None:
+        options = dict(self.ydl_options)
+        options["progress_hooks"] = [self._progress_hook]
+        options["logger"] = _DownloadLogger(self._emit_log)
+        options.setdefault("quiet", True)
+
         try:
-            with yt_dlp.YoutubeDL(opts) as ydl:
-                ydl.download([self.url])
-            if self._cancelled:
-                self.failed.emit("Cancelled.")
+            with yt_dlp.YoutubeDL(options) as downloader:
+                error_code = downloader.download([self.url])
+
+            if self._cancel_requested.is_set():
+                self.cancelled.emit()
+            elif error_code:
+                self.failed.emit(f"yt-dlp exited with status code {error_code}.")
             else:
-                self.finished_ok.emit()
-        except Exception as exc:  # noqa: BLE001 - surface any failure to the UI
-            self.failed.emit(str(exc))
+                self.completed.emit()
+        except yt_dlp.utils.DownloadError as exc:
+            if self._cancel_requested.is_set():
+                self.cancelled.emit()
+            else:
+                self.failed.emit(str(exc))
+        except Exception as exc:  # noqa: BLE001 - surface unexpected worker failures to the UI
+            if self._cancel_requested.is_set():
+                self.cancelled.emit()
+            else:
+                self.failed.emit(f"Unexpected download error: {exc}")

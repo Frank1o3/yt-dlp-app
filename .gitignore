@@ -1,9 +1,17 @@
+# Python environments and bytecode
 .venv/
 __pycache__/
-*.pyc
-uv.lock
+*.py[cod]
+
+# uv.lock is intentionally tracked for reproducible installs.
+
+# Build and test artifacts
 build/
 dist/
 *.egg-info/
-build-dir/
-.flatpak-builder/
+.ruff_cache/
+.pytest_cache/
+
+# Local editor and operating-system files
+.DS_Store
+.idea/

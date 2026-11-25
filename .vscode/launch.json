@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run yt-dlp-app",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "yt_dlp_app.main",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

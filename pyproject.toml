@@ -1,13 +1,33 @@
 [project]
-    dependencies=["PyQt6>=6.6.0", "yt-dlp>=2026.8.19"]
-    description="Simple PyQt6 GUI front-end for yt-dlp"
-    name="yt-dlp-app"
-    readme="README.md"
-    requires-python=">=3.14"
-    version="0.1.0"
+name = "yt-dlp-app"
+version = "0.1.0"
+description = "A lightweight PyQt6 desktop frontend for yt-dlp"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "PyQt6>=6.6.0",
+    "yt-dlp>=2026.8.19",
+]
 
-    [project.scripts]
-        yt-dlp-app="yt_dlp_app.main:main"
+[project.scripts]
+yt-dlp-app = "yt_dlp_app.main:main"
 
 [tool.uv]
-    package=true
+package = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ty.environment]
+python-version = "3.14"
+root = ["src"]
