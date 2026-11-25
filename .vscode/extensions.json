@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+    "ms-python.vscode-python-envs",
+    "astral-sh.ty",
+    "charliermarsh.ruff",
+    "editorconfig.editorconfig",
+    "tamasfe.even-better-toml",
+    "usernamehw.errorlens",
+    "christian-kohler.path-intellisense",
+    "oderwat.indent-rainbow",
+    "njpwerner.autodocstring"
+  ]
+}
